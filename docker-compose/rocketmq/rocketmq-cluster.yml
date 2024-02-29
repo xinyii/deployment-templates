@@ -36,6 +36,8 @@ services:
       - ./conf/async/broker-master.conf:/home/rocketmq/conf/broker.conf
       - ./conf/async/broker-proxy.json:/home/rocketmq/conf/proxy.json
     command: sh mqbroker -c /home/rocketmq/conf/broker.conf -pc /home/rocketmq/conf/proxy.json --enable-proxy
+    depends_on:
+      - rocketmq-namesrv
 
   # Service for slave broker
   rocketmq-broker-slave:
@@ -51,3 +53,6 @@ services:
       - ./conf/async/broker-slave.conf:/home/rocketmq/conf/broker.conf
       - ./conf/async/broker-proxy.json:/home/rocketmq/conf/proxy.json
     command: sh mqbroker -c /home/rocketmq/conf/broker.conf -pc /home/rocketmq/conf/proxy.json --enable-proxy
+    depends_on:
+      - rocketmq-broker-master
+      - rocketmq-namesrv
