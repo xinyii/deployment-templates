@@ -3,10 +3,12 @@ version: '3'
 services:
   redis-master:
     image: redis:5.0-alpine
+    container_name: redis-master
     network_mode: host
       
   redis-sentinel:
     image: bitnami/redis-sentinel:5.0
+    container_name: redis-sentinel
     network_mode: host
     environment:
       - REDIS_MASTER_HOST=<redis_master_host>
