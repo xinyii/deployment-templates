@@ -1,0 +1,53 @@
+# https://rocketmq.apache.org/zh/docs/deploymentOperations/01deploy
+# https://github.com/apache/rocketmq-docker/blob/master/templates/docker-compose/rmq5-docker-compose.yml
+# https://github.com/apache/rocketmq/tree/main/distribution/conf/2m-2s-async
+
+version: '3'
+
+volumes:
+  rocketmq-namesrv-logs:
+  rocketmq-broker-master-logs:
+  rocketmq-broker-master-store:
+  rocketmq-broker-slave-logs:
+  rocketmq-broker-slave-store:
+
+services:
+  # Service for nameserver
+  rocketmq-namesrv:
+    image: apache/rocketmq:5.1.4
+    container_name: rocketmq-namesrv
+    network_mode: host # 9876
+    restart: always
+    volumes:
+      - rocketmq-namesrv-logs:/home/rocketmq/logs
+    command: sh mqnamesrv
+
+  # Service for master broker
+  rocketmq-broker-master:
+    image: apache/rocketmq:5.1.4
+    container_name: rocketmq-broker-master
+    network_mode: host # 10909, 10911, 10912, 8080, 8081
+    restart: always
+    environment:
+      - NAMESRV_ADDR=<rocketmq-namesrv-host-1>:9876,<rocketmq-namesrv-host-2>:9876
+    volumes:
+      - rocketmq-broker-master-logs:/home/rocketmq/logs
+      - rocketmq-broker-master-store:/home/rocketmq/store
+      - ./conf/async/broker-master.conf:/home/rocketmq/conf/broker.conf
+      - ./conf/async/broker-proxy.json:/home/rocketmq/conf/proxy.json
+    command: sh mqbroker -c /home/rocketmq/conf/broker.conf -pc /home/rocketmq/conf/proxy.json --enable-proxy
+
+  # Service for slave broker
+  rocketmq-broker-slave:
+    image: apache/rocketmq:5.1.4
+    container_name: rocketmq-broker-slave
+    network_mode: host # 10909, 10911, 10912, 8080, 8081
+    restart: always
+    environment:
+      - NAMESRV_ADDR=<rocketmq-namesrv-host-1>:9876,<rocketmq-namesrv-host-2>:9876
+    volumes:
+      - rocketmq-broker-slave-logs:/home/rocketmq/logs
+      - rocketmq-broker-slave-store:/home/rocketmq/store
+      - ./conf/async/broker-slave.conf:/home/rocketmq/conf/broker.conf
+      - ./conf/async/broker-proxy.json:/home/rocketmq/conf/proxy.json
+    command: sh mqbroker -c /home/rocketmq/conf/broker.conf -pc /home/rocketmq/conf/proxy.json --enable-proxy

@@ -4,12 +4,14 @@ services:
   redis-master:
     image: redis:5.0-alpine
     container_name: redis-master
-    network_mode: host
+    network_mode: host # 6379
+    restart: always
       
   redis-sentinel:
     image: bitnami/redis-sentinel:5.0
     container_name: redis-sentinel
-    network_mode: host
+    network_mode: host # 26379
+    restart: always
     environment:
       - REDIS_MASTER_HOST=<redis_master_host>
       - REDIS_MASTER_PORT=6379
