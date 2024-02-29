@@ -4,13 +4,6 @@
 
 version: '3'
 
-volumes:
-  rocketmq-namesrv-logs:
-  rocketmq-broker-master-logs:
-  rocketmq-broker-master-store:
-  rocketmq-broker-slave-logs:
-  rocketmq-broker-slave-store:
-
 services:
   # Service for nameserver
   rocketmq-namesrv:
@@ -19,7 +12,7 @@ services:
     network_mode: host # 9876
     restart: always
     volumes:
-      - rocketmq-namesrv-logs:/home/rocketmq/logs
+      - /home/rocketmq/namesrv/logs:/home/rocketmq/logs
     command: sh mqnamesrv
 
   # Service for master broker
@@ -31,8 +24,8 @@ services:
     environment:
       - NAMESRV_ADDR=<rocketmq-namesrv-host-1>:9876,<rocketmq-namesrv-host-2>:9876
     volumes:
-      - rocketmq-broker-master-logs:/home/rocketmq/logs
-      - rocketmq-broker-master-store:/home/rocketmq/store
+      - /home/rocketmq/broker/master/logs:/home/rocketmq/logs
+      - /home/rocketmq/broker/master/store:/home/rocketmq/store
       - ./conf/async/broker-master.conf:/home/rocketmq/conf/broker.conf
       - ./conf/async/broker-proxy.json:/home/rocketmq/conf/proxy.json
     command: sh mqbroker -c /home/rocketmq/conf/broker.conf -pc /home/rocketmq/conf/proxy.json --enable-proxy
@@ -48,8 +41,8 @@ services:
     environment:
       - NAMESRV_ADDR=<rocketmq-namesrv-host-1>:9876,<rocketmq-namesrv-host-2>:9876
     volumes:
-      - rocketmq-broker-slave-logs:/home/rocketmq/logs
-      - rocketmq-broker-slave-store:/home/rocketmq/store
+      - /home/rocketmq/broker/slave/logs:/home/rocketmq/logs
+      - /home/rocketmq/broker/slave/store:/home/rocketmq/store
       - ./conf/async/broker-slave.conf:/home/rocketmq/conf/broker.conf
       - ./conf/async/broker-proxy.json:/home/rocketmq/conf/proxy.json
     command: sh mqbroker -c /home/rocketmq/conf/broker.conf -pc /home/rocketmq/conf/proxy.json --enable-proxy
