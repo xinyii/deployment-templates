@@ -19,7 +19,7 @@ services:
   rocketmq-broker-master:
     image: apache/rocketmq:5.1.4
     container_name: rocketmq-broker-master
-    network_mode: host # 10909, 10911, 10912, 8080, 8081
+    network_mode: host
     restart: always
     environment:
       - NAMESRV_ADDR=<rocketmq-namesrv-host-1>:9876,<rocketmq-namesrv-host-2>:9876
@@ -27,7 +27,7 @@ services:
       - /home/rocketmq/broker/master/logs:/home/rocketmq/logs
       - /home/rocketmq/broker/master/store:/home/rocketmq/store
       - ./conf/async/broker-master.conf:/home/rocketmq/conf/broker.conf
-      - ./conf/async/broker-proxy.json:/home/rocketmq/conf/proxy.json
+      - ./conf/async/broker-master-proxy.json:/home/rocketmq/conf/proxy.json
     command: sh mqbroker -c /home/rocketmq/conf/broker.conf -pc /home/rocketmq/conf/proxy.json --enable-proxy
     depends_on:
       - rocketmq-namesrv
@@ -36,7 +36,7 @@ services:
   rocketmq-broker-slave:
     image: apache/rocketmq:5.1.4
     container_name: rocketmq-broker-slave
-    network_mode: host # 10909, 10911, 10912, 8080, 8081
+    network_mode: host
     restart: always
     environment:
       - NAMESRV_ADDR=<rocketmq-namesrv-host-1>:9876,<rocketmq-namesrv-host-2>:9876
@@ -44,7 +44,7 @@ services:
       - /home/rocketmq/broker/slave/logs:/home/rocketmq/logs
       - /home/rocketmq/broker/slave/store:/home/rocketmq/store
       - ./conf/async/broker-slave.conf:/home/rocketmq/conf/broker.conf
-      - ./conf/async/broker-proxy.json:/home/rocketmq/conf/proxy.json
+      - ./conf/async/broker-slave-proxy.json:/home/rocketmq/conf/proxy.json
     command: sh mqbroker -c /home/rocketmq/conf/broker.conf -pc /home/rocketmq/conf/proxy.json --enable-proxy
     depends_on:
       - rocketmq-broker-master
