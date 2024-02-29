@@ -1,0 +1,15 @@
+version: '3'
+
+services:
+  redis-master:
+    image: redis:5.0-alpine
+    network_mode: host
+      
+  redis-sentinel:
+    image: bitnami/redis-sentinel:5.0
+    network_mode: host
+    environment:
+      - REDIS_MASTER_HOST=<redis_master_host>
+      - REDIS_MASTER_PORT=6379
+    depends_on:
+      - redis-master
