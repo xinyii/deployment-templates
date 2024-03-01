@@ -22,7 +22,7 @@ services:
     network_mode: host
     restart: always
     environment:
-      - NAMESRV_ADDR=<rocketmq-namesrv-host-1>:9876,<rocketmq-namesrv-host-2>:9876
+      - NAMESRV_ADDR=<rocketmq-namesrv-host-1>:9876;<rocketmq-namesrv-host-2>:9876
     volumes:
       - /home/rocketmq/broker/master/logs:/home/rocketmq/logs
       - /home/rocketmq/broker/master/store:/home/rocketmq/store
@@ -39,7 +39,7 @@ services:
     network_mode: host
     restart: always
     environment:
-      - NAMESRV_ADDR=<rocketmq-namesrv-host-1>:9876,<rocketmq-namesrv-host-2>:9876
+      - NAMESRV_ADDR=<rocketmq-namesrv-host-1>:9876;<rocketmq-namesrv-host-2>:9876
     volumes:
       - /home/rocketmq/broker/slave/logs:/home/rocketmq/logs
       - /home/rocketmq/broker/slave/store:/home/rocketmq/store
