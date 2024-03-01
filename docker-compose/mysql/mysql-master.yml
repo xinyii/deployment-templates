@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+  mysql-master:
+    image: mysql:8.0
+    container_name: mysql-master
+    network_mode: host # 3306
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: "123456"
+      MASTER_SYNC_USER: "sync_admin" # 设置脚本中定义的用于同步的账号
+      MASTER_SYNC_PASSWORD: "123456" # 设置脚本中定义的用于同步的密码
+      ADMIN_USER: "root" # 当前容器用于拥有创建账号功能的数据库账号
+      ADMIN_PASSWORD: "123456"
+      ALLOW_HOST: "0.0.0.0" # 允许同步账号的host地址
+      TZ: "Asia/Shanghai" # 解决时区问题
+    volumes: 
+      - ./script/master.sh:/docker-entrypoint-initdb.d/master.sh
+      - /home/mysql/data:/var/lib/mysql
+    command:
+      - "--server-id=1"
+      - "--character-set-server=utf8mb4"
+      - "--collation-server=utf8mb4_unicode_ci"
+      - "--log-bin=mysql-bin"
+      - "--sync_binlog=1"
