@@ -55,7 +55,10 @@ docker compose -f rocketmq-cluster.yml up -d
 ## 仪表盘
 
 ```shell
-docker run -d --name rocketmq-dashboard -e "JAVA_OPTS=-Drocketmq.namesrv.addr=<rocketmq-namesrv-host-1>:9876;<rocketmq-namesrv-host-2>:9876" -p 10908:8080 -t apacherocketmq/rocketmq-dashboard:latest
+docker run -d --name rocketmq-dashboard \
+  -e "JAVA_OPTS=-Drocketmq.namesrv.addr=<rocketmq-namesrv-host-1>:9876;<rocketmq-namesrv-host-2>:9876" \
+  -p 10908:8080 \
+  apacherocketmq/rocketmq-dashboard:latest
 ```
 
 ## 参考
