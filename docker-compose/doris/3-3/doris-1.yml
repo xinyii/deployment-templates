@@ -1,0 +1,31 @@
+version: '3'
+
+services:
+  doris-fe-01:
+    image: "apache/doris:2.0.0_alpha-fe-x86_64"
+    container_name: "doris-fe-01"
+    hostname: "fe-01"
+    environment:
+      - FE_SERVERS=fe1:<fe1-host>:9010,fe2:<fe2-host>:9010,fe3:<fe3-host>:9010
+      - FE_ID=1
+    network_mode: host # https://doris.apache.org/zh-CN/docs/install/cluster-deployment/standard-deployment/#%E7%AB%AF%E5%8F%A3%E8%A7%84%E5%88%92
+    restart: always
+    volumes:
+      - /home/doris/fe/doris-meta:/opt/apache-doris/fe/doris-meta
+      - /home/doris/fe/log:/opt/apache-doris/fe/log
+
+  doris-be-01:
+    image: "apache/doris:2.0.0_alpha-be-x86_64"
+    container_name: "doris-be-01"
+    hostname: "be-01"
+    depends_on:
+      - doris-fe-01
+    environment:
+      - FE_SERVERS=fe1:<fe1-host>:9010,fe2:<fe2-host>:9010,fe3:<fe3-host>:9010
+      - BE_ADDR=<host>:9050
+    network_mode: host # https://doris.apache.org/zh-CN/docs/install/cluster-deployment/standard-deployment/#%E7%AB%AF%E5%8F%A3%E8%A7%84%E5%88%92
+    restart: always
+    volumes:
+      - /home/doris/be/storage:/opt/apache-doris/be/storage
+      - /home/doris/be/script:/docker-entrypoint-initdb.d
+      - /home/doris/be/log:/opt/apache-doris/be/log
